@@ -7,12 +7,10 @@ namespace TCPEchoServer.Services;
 public class CrudPersonService : ICrudPersonService
 {
     private readonly IPersonRepository _personRepository;
-    private List<PersonModel> Persons { get; set; }
     
     public CrudPersonService()
     {
         _personRepository = new PersonRepository();
-        Persons = new List<PersonModel>();
     }
     
     public Boolean CrudAction(string action, StreamReader reader, StreamWriter writer)
@@ -33,13 +31,13 @@ public class CrudPersonService : ICrudPersonService
                 person.Address = reader.ReadLine();
                 writer.WriteLine("Person created!");
                 writer.Flush();
-                Persons = _personRepository.CreatePerson(Persons, person);
+                _personRepository.CreatePerson(person);
                 return false;
             case "edit":
                 writer.WriteLine("Enter person id:");
                 writer.Flush();
                 person.Id = Convert.ToInt32(reader.ReadLine());
-                if(!_personRepository.FindPerson(Persons, person))
+                if(!_personRepository.FindPerson(person))
                 {
                     writer.WriteLine("Person with this Id not found!");
                     writer.Flush();
@@ -56,13 +54,13 @@ public class CrudPersonService : ICrudPersonService
                 person.Address = reader.ReadLine();
                 writer.WriteLine("Person edited!");
                 writer.Flush();
-                Persons = _personRepository.EditPerson(Persons, person);
+                _personRepository.EditPerson(person);
                 return false;
             case "delete":
                 writer.WriteLine("Enter person id:");
                 writer.Flush();
                 person.Id = Convert.ToInt32(reader.ReadLine());
-                if(!_personRepository.FindPerson(Persons, person))
+                if(!_personRepository.FindPerson(person))
                 {
                     writer.WriteLine("Person with this Id not found!");
                     writer.Flush();
@@ -70,10 +68,10 @@ public class CrudPersonService : ICrudPersonService
                 }
                 writer.WriteLine("Person deleted!");
                 writer.Flush();
-                Persons = _personRepository.DeletePerson(Persons, person);
+                _personRepository.DeletePerson(person);
                 return false;
             case "list":
-                string personList = _personRepository.ListPerson(Persons);
+                string personList = _personRepository.ListPerson();
                 writer.WriteLine(personList);
                 writer.Flush();
                 return false;

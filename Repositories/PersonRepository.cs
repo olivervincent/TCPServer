@@ -6,35 +6,39 @@ namespace TCPEchoServer.Repositories;
 
 public class PersonRepository : IPersonRepository
 {
-    public List<PersonModel> CreatePerson(List<PersonModel> persons, PersonModel person)
+    private List<PersonModel> Persons { get; set; }
+
+    public PersonRepository()
     {
-        person.Id = persons.Count + 1;
-        persons.Add(person);
-        return persons;
+        Persons = new List<PersonModel>();
     }
-    
-    public List<PersonModel> DeletePerson(List<PersonModel> persons, PersonModel person)
+
+    public void CreatePerson(PersonModel person)
     {
-        persons.Remove(persons.Find(p => p.Id == person.Id));
-        return persons;
+        person.Id = Persons.Count + 1;
+        Persons.Add(person);
     }
-    
-    public List<PersonModel> EditPerson(List<PersonModel> persons, PersonModel person)
+
+    public void DeletePerson(PersonModel person)
     {
-        var index = persons.FindIndex(p => p.Id == person.Id);
-        persons[index] = person;
-        return persons;
+        Persons.Remove(Persons.Find(p => p.Id == person.Id));
     }
-    
-    public bool FindPerson(List<PersonModel> persons, PersonModel person)
+
+    public void EditPerson(PersonModel person)
     {
-        return persons.Exists(p => p.Id == person.Id);
+        var index = Persons.FindIndex(p => p.Id == person.Id);
+        Persons[index] = person;
     }
-    
-    public string ListPerson(List<PersonModel> persons)
+
+    public bool FindPerson(PersonModel person)
+    {
+        return Persons.Exists(p => p.Id == person.Id);
+    }
+
+    public string ListPerson()
     {
         var sb = new StringBuilder();
-        foreach (var person in persons)
+        foreach (var person in Persons)
         {
             sb.AppendLine($"Id: {person.Id}");
             sb.AppendLine($"Name: {person.Name}");
